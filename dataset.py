@@ -15,17 +15,21 @@ def generate_linear_dataset(size=10000, low=-50, high=50):
     dataset = []
 
     for _ in range(size):
+        
+        # a = 0
+        # while abs(a) < 0.1:
+        #     a = float(random.randint(low, high))
+        a = float(random.randint(low, high))
+        b = float(random.randint(low, high))
+        c = float(random.randint(low,high))
+        x = a*b+c
+        if a and b == 0:
+            continue
+        dataset.append(((a,b,c),x))
+        # x = float(random.randint(low, high))
 
-        a = 0
-        while abs(a) < 0.1:
-            a = random.uniform(low, high)
-
-        b = random.uniform(low, high)
-        x = random.uniform(low, high)
-
-        c = a * x + b
-
-        dataset.append(((c, a, b), x))
+        # c = a * x + b
+        # dataset.append(((c, a, b), x))
 
     return dataset
 

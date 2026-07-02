@@ -10,6 +10,7 @@
 # -----------------------
 
 import numpy as np
+import itertools
 from network import NeuralNetwork
 from layer import Layer
 from train import Trainer
@@ -18,20 +19,43 @@ from dataset import generate_linear_dataset
 
 
 # -----------------------
-# DATA
+# DATOS INICIALES
 # -----------------------
+#input
+a, b, c = 22.0, 24.0, 50.0 # x = 22*24+50
+
+data_size = 1000 #Antes en 50,000
+epochs = 300000
+minimo = 20.0 #valor minimo
+maximo = 60.0 # valor maximo
+
+def compute_x_range(low, high):
+    """Calcula el rango real de x = a*b + c evaluando las esquinas."""
+    corners = [low, high]
+    ab_values = [a * b for a, b in itertools.product(corners, repeat=2)]
+    ab_min, ab_max = min(ab_values), max(ab_values)
+    x_min = ab_min + low
+    x_max = ab_max + high
+    return x_min, x_max
+
+x_min, x_max = compute_x_range(minimo, maximo)
 # tamano de datos
-dataset = generate_linear_dataset(size=50000)
+dataset = generate_linear_dataset(size=data_size)
 
 X = np.array([inputs for inputs, target in dataset], dtype=np.float32)
 Y = np.array([[target] for inputs, target in dataset], dtype=np.float32)
 
 
 # -----------------------
-# OPTIONAL: podria normalizarse, pero asi por el momento
+# Normalizado a valores x,x y -x,x . Faltan pruebas para -x,-x
 # -----------------------
-X = X / np.array([2500.0, 50.0, 50.0], dtype=np.float32)
-Y = Y / 50.0
+X_norm = np.zeros_like(X)
+X_norm[:, 0] = (X[:, 0] - minimo) / (maximo - minimo)  # a
+X_norm[:, 1] = (X[:, 1] - minimo) / (maximo - minimo)  # b
+X_norm[:, 2] = (X[:, 2] - minimo) / (maximo - minimo)  # c
+
+X = X_norm
+Y = (Y - x_min) / (x_max - x_min)
 
 
 # -----------------------
@@ -42,6 +66,10 @@ network = NeuralNetwork()
 network.add(
     # layer(Neuronas de entrada, neuronas de salida, funcion de entrada, funcion de salida)
     Layer(3, 32, ActivationFunctions.relu, ActivationFunctions.relu_derivative)
+)
+
+network.add(
+    Layer(32, 32, ActivationFunctions.relu, ActivationFunctions.relu_derivative)
 )
 
 network.add(
@@ -61,7 +89,7 @@ history, data_epoch = Trainer.train(
     network,
     X,
     Y,
-    epochs=20000,
+    epochs=epochs,
     lr=0.005
 )
 
@@ -72,15 +100,18 @@ print("Training finished.")
 # IMPRIMIR RESULTADOS
 # COMENTARIO: TAMBIEN IMPRIME LA PERDIDA EN train.py EN TIEMPO REAL POR EPOCH
 # -----------------------
-pred = network.forward(X[:10])[-1]
+pred = network.forward(X)[-1]  # shape (N, 1), all samples
 
 print("\nPred vs True (first 10):")
-for i in range(10):
+for i in range(int((data_size//100))):
     print(f"pred={pred[i][0]:.4f} | true={Y[i][0]:.4f}")
 
+print("\nPred vs True (last 10):")
+for i in range(int(-(data_size//100)), 0):
+    print(f"pred={pred[i][0]:.4f} | true={Y[i][0]:.4f}")
 
 # -----------------------
-# REVISION DE PESOS
+# REVISION DE CAPAS
 # -----------------------
 print("\nLayer shapes:")
 for i, layer in enumerate(network.layers):
@@ -89,19 +120,18 @@ for i, layer in enumerate(network.layers):
 # -----------------------
 # REVISION DE PESOS
 # -----------------------
-def predict(network, c, a, b):
-    # NORMALIZADO DE LA MISMA MANERA QUE LOS DATOS EN train.py
-    # Comentario: se podria crear una var global para tener consistencia y evitar hacerlo manual
-    x_input = np.array([[c / 2500.0, a / 50.0, b / 50.0]], dtype=np.float32)
+def predict(network, a, b, c):
+    a_norm = (a - minimo) / (maximo - minimo)
+    b_norm = (b - minimo) / (maximo - minimo)
+    c_norm = (c - minimo) / (maximo - minimo)
+    x_input = np.array([[a_norm, b_norm, c_norm]], dtype=np.float32)
     pred = network.forward(x_input)[-1]
-    # output sin normalizar
-    return pred[0][0] * 50.0
+    return pred[0][0] * (x_max - x_min) + x_min
 
-# EJEMPLO
-c, a, b = 10.0, 2.0, 4.0  # (10-4)/2 = 3.0
-result = predict(network, c, a, b)
+
+result = predict(network, a, b, c)
 
 # -----------------------
 # IMPRIMEME GABO Y BETO :D
 # -----------------------
-print(f"\nFor c={c}, a={a}, b={b} → predicted x = {result:.4f} | true x = {(c-b)/a:.4f}")
+print(f"\nFor a={a}, b={b}, c={c} → predicted x = {result:.4f} | true x = {a*b+c:.4f}")
