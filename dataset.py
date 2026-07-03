@@ -26,10 +26,7 @@ def generate_linear_dataset(size=10000, low=-50, high=50):
         if a and b == 0:
             continue
         dataset.append(((a,b,c),x))
-        # x = float(random.randint(low, high))
 
-        # c = a * x + b
-        # dataset.append(((c, a, b), x))
 
     return dataset
 

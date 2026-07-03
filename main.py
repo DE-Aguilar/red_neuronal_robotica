@@ -16,18 +16,21 @@ from layer import Layer
 from train import Trainer
 from activations import ActivationFunctions
 from dataset import generate_linear_dataset
+from visualizacion import show_predictions, show_loss_gradient
 
 
 # -----------------------
 # DATOS INICIALES
 # -----------------------
 #input
-a, b, c = 22.0, 24.0, 50.0 # x = 22*24+50
-
-data_size = 1000 #Antes en 50,000
-epochs = 300000
-minimo = 20.0 #valor minimo
-maximo = 60.0 # valor maximo
+# ATENCION ATENCION ANTENCION: 
+# Numeros con mejores resultados por ahora
+a, b, c = 5.0, 5.0, 5.0 # x = 22*24+50
+data_size = 500 
+epochs = 1000
+minimo = 5.0 # valor minimo
+maximo = 50.0 # valor maximo
+lr = 0.02 
 
 def compute_x_range(low, high):
     """Calcula el rango real de x = a*b + c evaluando las esquinas."""
@@ -82,6 +85,7 @@ network.add(
 
 # -----------------------
 # ENTRENAMIENTO
+# COMENTARIO: TAMBIEN IMPRIME LA PERDIDA EN train.py EN TIEMPO REAL POR EPOCH
 # -----------------------
 print("Training started...")
 
@@ -90,25 +94,20 @@ history, data_epoch = Trainer.train(
     X,
     Y,
     epochs=epochs,
-    lr=0.005
+    lr=lr
 )
 
 print("Training finished.")
 
+# Grafica funcion de perdida
+# show_loss_gradient(data_epoch)
 
 # -----------------------
 # IMPRIMIR RESULTADOS
-# COMENTARIO: TAMBIEN IMPRIME LA PERDIDA EN train.py EN TIEMPO REAL POR EPOCH
 # -----------------------
+#Grafica comparacion de prediccion y valor real.
 pred = network.forward(X)[-1]  # shape (N, 1), all samples
-
-print("\nPred vs True (first 10):")
-for i in range(int((data_size//100))):
-    print(f"pred={pred[i][0]:.4f} | true={Y[i][0]:.4f}")
-
-print("\nPred vs True (last 10):")
-for i in range(int(-(data_size//100)), 0):
-    print(f"pred={pred[i][0]:.4f} | true={Y[i][0]:.4f}")
+show_predictions(pred,Y)
 
 # -----------------------
 # REVISION DE CAPAS
