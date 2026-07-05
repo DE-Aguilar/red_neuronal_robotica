@@ -25,9 +25,9 @@ from visualizacion import show_predictions, show_loss_gradient
 #input
 # ATENCION ATENCION ANTENCION: 
 # Numeros con mejores resultados por ahora
-a, b, c = 5.0, 5.0, 5.0 # x = 22*24+50
-data_size = 500 
-epochs = 1000
+a, b, c = 15.0, 25.0, 30.0 # x = 22*24+50
+data_size = 8000 #recomendado 7000 a 10000
+epochs = 30000 #recomendado 30000 a 35000
 minimo = 5.0 # valor minimo
 maximo = 50.0 # valor maximo
 lr = 0.02 
