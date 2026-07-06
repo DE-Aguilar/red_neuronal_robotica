@@ -15,7 +15,7 @@ def show_loss_gradient(data_epoch):
     plt.xlabel("Epoch")
     plt.ylabel("Loss (MSE)")
     plt.grid(True)
-    plt.show(block=False)
+    plt.show()
 
 def horizontalRule():
     print("\n")
@@ -35,11 +35,9 @@ def table(title, columns, rows):
 
     console = Console()
     console.print(table)
+    horizontalRule()
 
 def layerStructure(network_layers):
-    print("\nLayer shapes:")
     for i, layer in enumerate(network_layers):
-        
-        print(i, layer.weights.shape)
-
-    horizontalRule()
+        layer_info = [(str(i), *map(str, layer.weights.shape)) for i, layer in enumerate(network_layers)]
+    table("Capas", ("Capa", "N. Entrada", "N. Salida"), layer_info)

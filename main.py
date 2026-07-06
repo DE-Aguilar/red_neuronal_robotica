@@ -1,5 +1,5 @@
 # -----------------------
-# AI de 3 capas para funcion lineal con una incognita.
+# Red neuronal para aproximar f(a,b,c)=ab+c
 # fecha: jun 28 2026
 # Autor: Daniel Emiliano Lopez Aguilar
 # archivo: main.py
@@ -8,7 +8,7 @@
 #       El resultado varia dependiendo del tamaño de datos de entrenamiento, su variabilidad y rango.
 #       usa 3 capas. 
 # -----------------------
-
+from topologies import Topologies
 import numpy as np
 import itertools
 from network import NeuralNetwork
@@ -16,7 +16,6 @@ from layer import Layer
 from train import Trainer
 from activations import ActivationFunctions
 from dataset import generate_linear_dataset, test_cases
-# from visualizacion import show_predictions, show_loss_gradient
 import visualizacion as vs
 
 
@@ -67,30 +66,13 @@ Y = (Y - x_min) / (x_max - x_min)
 # -----------------------
 # CAPAS RED NEURONAL
 # -----------------------
-network = NeuralNetwork()
-
-network.add(
-    # layer(Neuronas de entrada, neuronas de salida, funcion de entrada, funcion de salida)
-    Layer(3, 32, ActivationFunctions.relu, ActivationFunctions.relu_derivative)
-)
-
-network.add(
-    Layer(32, 32, ActivationFunctions.relu, ActivationFunctions.relu_derivative)
-)
-
-network.add(
-    Layer(32, 32, ActivationFunctions.relu, ActivationFunctions.relu_derivative)
-)
-
-network.add(
-    Layer(32, 1, ActivationFunctions.linear, ActivationFunctions.linear_derivative)
-)
+network = Topologies.small()
 
 # -----------------------
 # ENTRENAMIENTO
 # COMENTARIO: TAMBIEN IMPRIME LA PERDIDA EN train.py EN TIEMPO REAL POR EPOCH
 # -----------------------
-print("Training started...")
+print("Entrenamiento iniciado...")
 
 history, data_epoch = Trainer.train(
     network,
@@ -99,14 +81,13 @@ history, data_epoch = Trainer.train(
     epochs=epochs,
     lr=lr
 )
+print("Entrenamiento terminado...")
 
 vs.horizontalRule()
 # -----------------------
-# REVISION DE CAPAS
+# TABLA DE CAPAS
 # -----------------------
-print("\nLayer shapes:")
-for i, layer in enumerate(network.layers):
-    print(i, layer.weights.shape)
+vs.layerStructure(network.layers)
 # -----------------------
 # TABLA EPOCAS POR FUNCION
 # -----------------------
@@ -115,8 +96,6 @@ data_epochs_table =[[str(item[0]), f"{item[1]:.5f}"] for item in data_epoch]
 vs.table("Funcion de perdida por epocas", ("Epocas (Epochs)","Func. Perdida (Loss)",), data_epochs_table)
 
 
-# Grafica funcion de perdida
-# show_loss_gradient(data_epoch)
 
 # -----------------------
 # IMPRIMIR RESULTADOS
@@ -145,7 +124,5 @@ vs.table(f"Resultados de {ecuacion}", ("a", "b", "c", "Verdadero", "IA", "Difere
 
 result = predict(network, a, b, c)
 
-# -----------------------
-# IMPRIMEME GABO Y BETO :D
-# -----------------------
-# print(f"\nFor a={a}, b={b}, c={c} → predicted x = {result:.4f} | true x = {a*b+c:.4f}")
+# Grafica funcion de perdida
+vs.show_loss_gradient(data_epoch)

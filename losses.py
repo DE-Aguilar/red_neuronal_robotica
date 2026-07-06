@@ -1,5 +1,5 @@
 # -----------------------
-# AI de 3 capas para funcion lineal con una incognita.
+# Red neuronal para aproximar f(a,b,c)=ab+c
 # fecha: jun 28 2026
 # Autor: Daniel Emiliano Lopez Aguilar
 # archivo: losses.py
