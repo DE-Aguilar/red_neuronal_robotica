@@ -15,8 +15,9 @@ from network import NeuralNetwork
 from layer import Layer
 from train import Trainer
 from activations import ActivationFunctions
-from dataset import generate_linear_dataset
-from visualizacion import show_predictions, show_loss_gradient
+from dataset import generate_linear_dataset, test_cases
+# from visualizacion import show_predictions, show_loss_gradient
+import visualizacion as vs
 
 
 # -----------------------
@@ -25,11 +26,13 @@ from visualizacion import show_predictions, show_loss_gradient
 #input
 # ATENCION ATENCION ANTENCION: 
 # Numeros con mejores resultados por ahora
-a, b, c = 15.0, 25.0, 30.0 # x = 22*24+50
-data_size = 8000 #recomendado 7000 a 10000
-epochs = 30000 #recomendado 30000 a 35000
+ecuacion = "x=ab+c"
+data_size = 100 #recomendado 7000 a 10000
+epochs = 30 #recomendado 30000 a 35000
 minimo = 5.0 # valor minimo
 maximo = 50.0 # valor maximo
+tests = test_cases(10, minimo, maximo)
+
 lr = 0.02 
 
 def compute_x_range(low, high):
@@ -50,7 +53,7 @@ Y = np.array([[target] for inputs, target in dataset], dtype=np.float32)
 
 
 # -----------------------
-# Normalizado a valores x,x y -x,x . Faltan pruebas para -x,-x
+# Normalizado a valores x,x y -x,x . Faltan pruebas para -x,-y
 # -----------------------
 X_norm = np.zeros_like(X)
 X_norm[:, 0] = (X[:, 0] - minimo) / (maximo - minimo)  # a
@@ -97,27 +100,26 @@ history, data_epoch = Trainer.train(
     lr=lr
 )
 
-print("Training finished.")
-
-# Grafica funcion de perdida
-# show_loss_gradient(data_epoch)
-
-# -----------------------
-# IMPRIMIR RESULTADOS
-# -----------------------
-#Grafica comparacion de prediccion y valor real.
-pred = network.forward(X)[-1]  # shape (N, 1), all samples
-show_predictions(pred,Y)
-
+vs.horizontalRule()
 # -----------------------
 # REVISION DE CAPAS
 # -----------------------
 print("\nLayer shapes:")
 for i, layer in enumerate(network.layers):
     print(i, layer.weights.shape)
+# -----------------------
+# TABLA EPOCAS POR FUNCION
+# -----------------------
+data_epochs_table =[[str(item[0]), f"{item[1]:.5f}"] for item in data_epoch]
+
+vs.table("Funcion de perdida por epocas", ("Epocas (Epochs)","Func. Perdida (Loss)",), data_epochs_table)
+
+
+# Grafica funcion de perdida
+# show_loss_gradient(data_epoch)
 
 # -----------------------
-# REVISION DE PESOS
+# IMPRIMIR RESULTADOS
 # -----------------------
 def predict(network, a, b, c):
     a_norm = (a - minimo) / (maximo - minimo)
@@ -128,9 +130,22 @@ def predict(network, a, b, c):
     return pred[0][0] * (x_max - x_min) + x_min
 
 
+
+rows = []
+for a, b, c, x in tests:
+    predicted = round(predict(network, a, b, c))
+
+    error = abs(predicted - x)
+    
+    data =[str(x) for x in [a,b,c,x,predicted,error]]
+    rows.append(data)
+
+vs.table(f"Resultados de {ecuacion}", ("a", "b", "c", "Verdadero", "IA", "Diferencia"),rows)
+
+
 result = predict(network, a, b, c)
 
 # -----------------------
 # IMPRIMEME GABO Y BETO :D
 # -----------------------
-print(f"\nFor a={a}, b={b}, c={c} → predicted x = {result:.4f} | true x = {a*b+c:.4f}")
+# print(f"\nFor a={a}, b={b}, c={c} → predicted x = {result:.4f} | true x = {a*b+c:.4f}")

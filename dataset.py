@@ -29,4 +29,20 @@ def generate_linear_dataset(size=10000, low=-50, high=50):
 
 
     return dataset
+def test_cases(size, low, high):
+    test_cases = []
+    data = generate_linear_dataset(size, int(low), int(high))
+    
+    for i in data:
+        
+        test_cases.append(i[0]+(i[1],))
+        
+    return test_cases
 
+
+# def tupleToArray(data):
+#     data_array = []
+#     for i in data:
+#         data_array.append(i[0]+(i[1],))
+#     return data_array
+#     return [i[0]+(i[1],) for i in data]

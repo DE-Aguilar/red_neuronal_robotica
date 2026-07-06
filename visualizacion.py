@@ -1,60 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
-
-def show_predictions( pred, Y, percentage=1):
-    """
-    Shows:
-      1. Training loss
-      2. Predictions vs Ground Truth
-      3. Prints first and last <percentage>% of predictions
-    """
-
-    n = len(Y)
-    count = max(1, int(n * percentage / 100))
-
-    # --------------------------
-    # Print predictions
-    # --------------------------
-    print(f"\nPred vs True (first {percentage}% | {count} samples):")
-    for i in range(count):
-        print(f"pred={pred[i][0]:.4f} | true={Y[i][0]:.4f}")
-
-    print(f"\nPred vs True (last {percentage}% | {count} samples):")
-    for i in range(n - count, n):
-        print(f"pred={pred[i][0]:.4f} | true={Y[i][0]:.4f}")
-
-    # --------------------------
-    # Graph 1: Loss
-    # --------------------------
-   # -------- First percentage --------
-   # -------- First percentage --------
-    first_pred = pred[:count].flatten()
-    first_true = Y[:count].flatten()
-    first_diff = np.abs(first_pred - first_true)
-
-    # -------- Last percentage --------
-    last_pred = pred[-count:].flatten()
-    last_true = Y[-count:].flatten()
-    last_diff = np.abs(last_pred - last_true)
-
-    plt.figure(figsize=(12,5))
-
-    plt.plot(first_diff, marker='o', label=f'First {percentage}%')
-    plt.plot(last_diff, marker='x', label=f'Last {percentage}%')
-
-    plt.axhline(0, color='gray', linestyle='--')
-    plt.title('Prediction Error Comparison')
-    plt.xlabel('Sample')
-    plt.ylabel('|Prediction - True|')
-    plt.grid(True)
-    plt.legend()
-
-
-
-   
-    plt.show()
-
-
+import rich as r
+from rich.console import Console
+from rich.table import Table
 import matplotlib.pyplot as plt
 
 def show_loss_gradient(data_epoch):
@@ -68,3 +16,30 @@ def show_loss_gradient(data_epoch):
     plt.ylabel("Loss (MSE)")
     plt.grid(True)
     plt.show(block=False)
+
+def horizontalRule():
+    print("\n")
+    print("-"*64)
+    print("\n")
+
+
+def table(title, columns, rows):
+    table = Table(title=title)
+    for column in columns:
+        table.add_column(str(column))
+    
+    for row in rows:
+
+        table.add_row(*row, style='bright_green')
+
+
+    console = Console()
+    console.print(table)
+
+def layerStructure(network_layers):
+    print("\nLayer shapes:")
+    for i, layer in enumerate(network_layers):
+        
+        print(i, layer.weights.shape)
+
+    horizontalRule()
