@@ -26,13 +26,15 @@ import visualizacion as vs
 # ATENCION ATENCION ANTENCION: 
 # Numeros con mejores resultados por ahora
 ecuacion = "x=ab+c"
-data_size = 100 #recomendado 7000 a 10000
-epochs = 30 #recomendado 30000 a 35000
-minimo = 5.0 # valor minimo
-maximo = 50.0 # valor maximo
-tests = test_cases(10, minimo, maximo)
-
-lr = 0.02 
+data_size = 10000 #
+epochs = 35000 #
+minimo = -50.0 # valor minimoj
+maximo = 50.0 # valor maqximo
+lr = 0.025
+tests = test_cases(1000, minimo, maximo)
+test_constant = tests[0] # (25.0, 20.0, 33.0, 533.0)
+red_neuronal = Topologies.wide() # Opciones: .wide .medium .small .bottle_neck
+print(f"data_size = {data_size}\nepochs = {epochs}\nminimo = {minimo}\nmaximo = {maximo}\n lr = {lr}")
 
 def compute_x_range(low, high):
     """Calcula el rango real de x = a*b + c evaluando las esquinas."""
@@ -66,7 +68,7 @@ Y = (Y - x_min) / (x_max - x_min)
 # -----------------------
 # CAPAS RED NEURONAL
 # -----------------------
-network = Topologies.small()
+network = red_neuronal
 
 # -----------------------
 # ENTRENAMIENTO
@@ -78,7 +80,7 @@ history, data_epoch = Trainer.train(
     network,
     X,
     Y,
-    epochs=epochs,
+    epochs = epochs,
     lr=lr
 )
 print("Entrenamiento terminado...")
@@ -93,7 +95,7 @@ vs.layerStructure(network.layers)
 # -----------------------
 data_epochs_table =[[str(item[0]), f"{item[1]:.5f}"] for item in data_epoch]
 
-vs.table("Funcion de perdida por epocas", ("Epocas (Epochs)","Func. Perdida (Loss)",), data_epochs_table)
+# vs.table("Funcion de perdida por epocas", ("Epocas (Epochs)","Func. Perdida (Loss)",), data_epochs_table)
 
 
 
@@ -111,6 +113,7 @@ def predict(network, a, b, c):
 
 
 rows = []
+MAE = []
 for a, b, c, x in tests:
     predicted = round(predict(network, a, b, c))
 
@@ -118,11 +121,14 @@ for a, b, c, x in tests:
     
     data =[str(x) for x in [a,b,c,x,predicted,error]]
     rows.append(data)
+    MAE.append(error)
 
-vs.table(f"Resultados de {ecuacion}", ("a", "b", "c", "Verdadero", "IA", "Diferencia"),rows)
+vs.table(f"Resultados de {ecuacion}", ("a", "b", "c", "Verdadero", "IA", "Diferencia"),rows[:20])
 
+mae_value = sum(MAE)/len(MAE)
+print(f"MAE: {mae_value}")
 
 result = predict(network, a, b, c)
 
 # Grafica funcion de perdida
-vs.show_loss_gradient(data_epoch)
+vs.show_loss_gradient(data_epoch, epochs_num = epochs, title = "Funcion de perdida", data_size=data_size, min = minimo, max = maximo)

@@ -37,7 +37,7 @@ class Topologies:
         )
 
         network.add(
-            Layer(16, 8, ActivationFunctions.linear, ActivationFunctions.linear_derivative)
+            Layer(16, 8, ActivationFunctions.relu, ActivationFunctions.relu_derivative)
         )
 
         network.add(
@@ -51,7 +51,7 @@ class Topologies:
         
 
         network.add(
-        Layer(3, 8, ActivationFunctions.relu, ActivationFunctions.relu_derivative)
+            Layer(3, 8, ActivationFunctions.relu, ActivationFunctions.relu_derivative)
         )
 
         network.add(
