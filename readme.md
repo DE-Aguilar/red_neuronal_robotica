@@ -1,7 +1,7 @@
 # Red neuronal simple demostrativa para clase, entrenamiento en tiempo real.
 # Real-Time Perceptron & Neural Network, demostration for class.
 
-[![Python Version](https://img.shields.io/badge/python-3.9%20%20-blue.svg)](https://www.python.org/downloads/release/python-3135/)
+[![Python Version](https://img.shields.io/badge/python-3.13.5%20%20-blue.svg)](https://www.python.org/downloads/release/python-3135/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Una implementación desde cero de una red neuronal con entrenamiento, prueba y resumen de gráficos y tablas para su análisis.
@@ -23,7 +23,7 @@ Este proyecto fue desarrollado originalmente como un módulo demostrativo para e
 ## Demostración y Resultados
 
 
-![Vista previa del entrenamiento](./assets/training_in_real_time.png
+![Vista previa del entrenamiento](./assets/training_in_real_time.png)
 
 Al finalizar el entrenamiento, el simulador despliega de forma automática:
 1. **Estructura de Capas:** Inspección visual de la topología seleccionada.
@@ -31,8 +31,8 @@ Al finalizar el entrenamiento, el simulador despliega de forma automática:
 3. **Mesa de Predicciones:** Tabla comparativa entre los valores reales y las inferencias de la red.
 4. **Métricas de Precisión:** Conteo de aciertos exactos en el set de pruebas y cálculo del **MAE (Mean Absolute Error)**.
 
-![Tabla de una porcion de resultados](./assets/test_dataset_results.png
-![Gráfico de la evolución del error (loss function)](./assets/loss_function_graph.png
+![Tabla de una porcion de resultados](./assets/test_dataset_results.png)
+![Gráfico de la evolución del error (loss function)](./assets/loss_function_graph.png)
 
 ---
 
