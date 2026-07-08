@@ -1,3 +1,13 @@
+# -----------------------
+# Red neuronal para aproximar f(a,b,c)=ab+c
+# fecha: jul 05 2026
+# Autor: Daniel Emiliano Lopez Aguilar
+# archivo: visualizacion.py
+# Objetivo: Por medio de entrenamiento la IA deberá hacercarse lo más posible al valor correcto de x.
+# Comentarios y ajustes:
+#       El resultado varia dependiendo del tamaño de datos de entrenamiento, su variabilidad y rango.
+#       usa 3 capas. 
+# -----------------------
 import matplotlib.pyplot as plt
 import numpy as np
 import rich as r

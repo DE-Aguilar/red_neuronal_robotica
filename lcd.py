@@ -2,10 +2,9 @@
 # Red neuronal para aproximar f(a,b,c)=ab+c
 # fecha: jul 05 2026
 # Autor: Daniel Emiliano Lopez Aguilar
-# archivo: main.py
-# Objetivo: Por medio de entrenamiento la IA deberá hacercarse lo más posible al valor correcto de x.
-# Comentarios y ajustes:
-#       El resultado varia dependiendo del tamaño de datos de entrenamiento, su variabilidad y rango. 
+# archivo: lcd.py
+# Objetivo: This file is for internal purposes only for our organization,
+#  but feel free to use it. It does the same thing but withouth fancy texts and tables.
 # -----------------------
 from dataset import generate_linear_dataset, test_cases
 import numpy as np

@@ -16,9 +16,7 @@ def generate_linear_dataset(size=10000, low=-50, high=50):
 
     for _ in range(size):
         
-        # a = 0
-        # while abs(a) < 0.1:
-        #     a = float(random.randint(low, high))
+
         a = float(random.randint(low, high))
         b = float(random.randint(low, high))
         c = float(random.randint(low,high))
@@ -40,9 +38,3 @@ def test_cases(size, low, high):
     return test_cases
 
 
-# def tupleToArray(data):
-#     data_array = []
-#     for i in data:
-#         data_array.append(i[0]+(i[1],))
-#     return data_array
-#     return [i[0]+(i[1],) for i in data]

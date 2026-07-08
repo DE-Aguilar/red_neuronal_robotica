@@ -1,0 +1,46 @@
+# Red neuronal simple
+
+Este proyecto entrena una red neuronal sencilla para aproximar la función $f(a,b,c)=a\cdot b+c$ a partir de datos generados aleatoriamente.
+
+## Objetivo
+
+La red aprende a predecir el valor de $x$ a partir de tres entradas: $a$, $b$ y $c$. Durante el entrenamiento, muestra la pérdida por época y compara algunas predicciones con valores reales.
+
+## Requisitos
+
+- Python 3.9 o superior
+- pip
+- Nota: Se recomienda usar un entorno virtual de python.
+
+Librerías necesarias:
+- numpy
+- scipy
+- matplotlib
+- rich
+
+Instalación:
+
+```bash
+pip install numpy scipy matplotlib rich
+```
+
+## Cómo ejecutar:
+
+```bash
+python main.py
+```
+
+El script entrenará la red, al terminar el entrenamiento mostrará la estructura de capas, la curva de pérdida en gráfico y tabla, una tabla con ejemplos de predicciones, las veces que la IA encontró el valor real en el set de pruebas y el valor de MAE del set de pruebas.
+
+## Parametros iniciales
+
+En [main.py](main.py) puedes ajustar parámetros como:
+- `data_size`
+- `epochs`
+- `lr`
+- `minimo` y `maximo`
+
+También puedes cambiar la arquitectura de la red en [topologies.py](topologies.py) usando `Topologies.wide()`, `Topologies.medium()`, `Topologies.small()` o `Topologies.bottle_neck()`.
+
+
+

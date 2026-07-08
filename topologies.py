@@ -1,7 +1,7 @@
 from network import NeuralNetwork
 from layer import Layer
 from activations import ActivationFunctions
-
+# TODO: Add bigger networks in layers and neurons.
 class Topologies:
     
     @staticmethod
@@ -58,7 +58,7 @@ class Topologies:
             Layer(8, 1, ActivationFunctions.linear, ActivationFunctions.linear_derivative)
         )
         return network
-
+# FIXME bottle neck not working, don't know why, but probably it's the topology structure itself.
     @staticmethod
     def bottle_neck():
         network = NeuralNetwork()

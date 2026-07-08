@@ -26,15 +26,15 @@ import visualizacion as vs
 # ATENCION ATENCION ANTENCION: 
 # Numeros con mejores resultados por ahora
 ecuacion = "x=ab+c"
-data_size = 10000 #
-epochs = 35000 #
-minimo = -50.0 # valor minimoj
-maximo = 50.0 # valor maqximo
-lr = 0.025
-tests = test_cases(1000, minimo, maximo)
-test_constant = tests[0] # (25.0, 20.0, 33.0, 533.0)
+data_size = 10000 #Recomendado 10000
+epochs = 35000 #350000
+minimo = -50.0 # valor minimo
+maximo = 50.0 # valor maximo
+lr = 0.025 #Recomendado
 red_neuronal = Topologies.wide() # Opciones: .wide .medium .small .bottle_neck
-print(f"data_size = {data_size}\nepochs = {epochs}\nminimo = {minimo}\nmaximo = {maximo}\n lr = {lr}")
+tests = test_cases(1000, minimo, maximo)
+test_constant = tests[0]
+print(f"data_size = {data_size}\nepochs = {epochs}\nminimo = {minimo}\nmaximo = {maximo}\nlr = {lr}")
 
 def compute_x_range(low, high):
     """Calcula el rango real de x = a*b + c evaluando las esquinas."""
@@ -101,6 +101,7 @@ data_epochs_table =[[str(item[0]), f"{item[1]:.5f}"] for item in data_epoch]
 
 # -----------------------
 # IMPRIMIR RESULTADOS
+# FIXME Get all this prints and tables to another class or refactor for clarity
 # -----------------------
 def predict(network, a, b, c):
     a_norm = (a - minimo) / (maximo - minimo)
@@ -111,8 +112,9 @@ def predict(network, a, b, c):
     return pred[0][0] * (x_max - x_min) + x_min
 
 
-
+# Columnas para tabla
 rows = []
+# Mean absolute error
 MAE = []
 for a, b, c, x in tests:
     predicted = round(predict(network, a, b, c))
@@ -124,9 +126,14 @@ for a, b, c, x in tests:
     MAE.append(error)
 
 vs.table(f"Resultados de {ecuacion}", ("a", "b", "c", "Verdadero", "IA", "Diferencia"),rows[:20])
-
+# times the neural net got the value right
+correct_ai_prediction_quantity = sum(1 for i in MAE if i == 0)
+# Mean absolute error
 mae_value = sum(MAE)/len(MAE)
+# TODO might need more statistics such as a residual plot, RMSE data and S squared data.
 print(f"MAE: {mae_value}")
+# 
+print(f"En efecto es ia {correct_ai_prediction_quantity} veces de {len(tests)}")
 
 result = predict(network, a, b, c)
 
