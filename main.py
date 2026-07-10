@@ -26,15 +26,27 @@ import visualizacion as vs
 # ATENCION ATENCION ANTENCION: 
 # Numeros con mejores resultados por ahora
 ecuacion = "x=ab+c"
-data_size = 10000 #Recomendado 10000
-epochs = 35000 #350000
-minimo = -50.0 # valor minimo
+data_size = 30 #Recomendado 30000
+epochs = 100 #100000
+minimo = 20.0 # valor minimo
 maximo = 50.0 # valor maximo
 lr = 0.025 #Recomendado
-red_neuronal = Topologies.wide() # Opciones: .wide .medium .small .bottle_neck
+red_neuronal = Topologies.medium() # Opciones: .wide .medium .small .bottle_neck
 tests = test_cases(1000, minimo, maximo)
 test_constant = tests[0]
-print(f"data_size = {data_size}\nepochs = {epochs}\nminimo = {minimo}\nmaximo = {maximo}\nlr = {lr}")
+vs.richMessage(
+    f"""[white]CONFIGURACION DE ENTRENAMIENTO[/white]
+        [white]x = f(a,b,c) = ab+c[/white]
+
+[cyan]Cantidad Datos de Entrenamiento:[/cyan] {data_size:,}
+[cyan]Epocas:[/cyan] {epochs:,}
+[cyan]Valor Minimo:[/cyan] {minimo}
+[cyan]Valor Maximo:[/cyan] {maximo}
+[cyan]Tasa de aprendizaje:[/cyan] {lr}
+""",
+    "blue"
+)
+# print(f"data_size = {data_size}\nepochs = {epochs}\nminimo = {minimo}\nmaximo = {maximo}\nlr = {lr}")
 
 def compute_x_range(low, high):
     """Calcula el rango real de x = a*b + c evaluando las esquinas."""
@@ -74,7 +86,7 @@ network = red_neuronal
 # ENTRENAMIENTO
 # COMENTARIO: TAMBIEN IMPRIME LA PERDIDA EN train.py EN TIEMPO REAL POR EPOCH
 # -----------------------
-print("Entrenamiento iniciado...")
+vs.richMessage("Entrenamiento Iniciado ... ", "bold cyan")
 
 history, data_epoch = Trainer.train(
     network,
@@ -83,7 +95,7 @@ history, data_epoch = Trainer.train(
     epochs = epochs,
     lr=lr
 )
-print("Entrenamiento terminado...")
+vs.richMessage("Entrenamiento Terminado con Exito ", "bold green")
 
 vs.horizontalRule()
 # -----------------------
@@ -95,7 +107,7 @@ vs.layerStructure(network.layers)
 # -----------------------
 data_epochs_table =[[str(item[0]), f"{item[1]:.5f}"] for item in data_epoch]
 
-# vs.table("Funcion de perdida por epocas", ("Epocas (Epochs)","Func. Perdida (Loss)",), data_epochs_table)
+vs.table("Funcion de perdida por epocas", ("Epocas (Epochs)","Func. Perdida (Loss)",), data_epochs_table)
 
 
 
@@ -128,12 +140,29 @@ for a, b, c, x in tests:
 vs.table(f"Resultados de {ecuacion}", ("a", "b", "c", "Verdadero", "IA", "Diferencia"),rows[:20])
 # times the neural net got the value right
 correct_ai_prediction_quantity = sum(1 for i in MAE if i == 0)
+exact = sum(1 for error in MAE if error == 0)
+between_0_5 = sum(1 for error in MAE if 0 < error <= 5)
+between_5_10 = sum(1 for error in MAE if 5 < error <= 10)
+between_10_20 = sum(1 for error in MAE if 10 < error <= 20)
+between_20_30 = sum(1 for error in MAE if 20 < error <= 30)
+greater_30 = sum(1 for error in MAE if error > 30)
 # Mean absolute error
 mae_value = sum(MAE)/len(MAE)
 # TODO might need more statistics such as a residual plot, RMSE data and S squared data.
-print(f"MAE: {mae_value}")
-# 
-print(f"En efecto es ia {correct_ai_prediction_quantity} veces de {len(tests)}")
+# print(f"MAE: {mae_value}")
+# # 
+# print(f"En efecto es ia {correct_ai_prediction_quantity} veces de {len(tests)}.")
+# print (f"porcentaje de acertividad: {round(correct_ai_prediction_quantity/len(tests)*100,5)}%")
+vs.richResults(
+    mae=mae_value,
+    correct=correct_ai_prediction_quantity,
+    total=len(tests),
+    between_0_5=between_0_5,
+    between_5_10=between_5_10,
+    between_10_20=between_10_20,
+    between_20_30=between_20_30,
+    greater_30=greater_30,
+)
 
 result = predict(network, a, b, c)
 

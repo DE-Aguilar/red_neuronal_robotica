@@ -13,8 +13,9 @@ import numpy as np
 import rich as r
 from rich.console import Console
 from rich.table import Table
+from rich.panel import Panel
 import matplotlib.pyplot as plt
-
+console = Console()
 def show_loss_gradient(data_epoch, epochs_num, title, data_size, min, max):
     epochs = [epoch for epoch, _ in data_epoch]
     losses = [loss for _, loss in data_epoch]
@@ -52,3 +53,72 @@ def layerStructure(network_layers):
     for i, layer in enumerate(network_layers):
         layer_info = [(str(i), *map(str, layer.weights.shape)) for i, layer in enumerate(network_layers)]
     table("Capas", ("Capa", "N. Entrada", "N. Salida"), layer_info)
+
+
+def richMessage(message, color):
+    
+
+    console.print(
+        Panel.fit(
+            f"[bold {color}]{str(message)}[/bold {color}]",
+            border_style=color
+        )
+    )
+
+def richResults(
+    mae,
+    correct,
+    total,
+    between_0_5,
+    between_5_10,
+    between_10_20,
+    between_20_30,
+    greater_30,
+    ):
+    accuracy = round((correct / total) * 100,5)
+
+    table = Table(show_header=False, box=None, pad_edge=False)
+    table.add_column(style="cyan")
+    table.add_column(style="bold white")
+
+    table.add_row("MAE (Error medio absoluto)", f"{mae:.6f}")
+    table.add_row("🎯 Predicciones correctas exactas", f"{correct:,} / {total:,}")
+
+    table.add_row(
+        "🟢 Error 0–5",
+        f"{between_0_5:,} ({between_0_5 / total * 100:.2f}%)"
+    )
+
+    table.add_row(
+        "🟡 Error 5–10",
+        f"{between_5_10:,} ({between_5_10 / total * 100:.2f}%)"
+    )
+
+    table.add_row(
+        "🟠 Error 10–20",
+        f"{between_10_20:,} ({between_10_20 / total * 100:.2f}%)"
+    )
+
+    table.add_row(
+        "🔴 Error 20–30",
+        f"{between_20_30:,} ({between_20_30 / total * 100:.2f}%)"
+    )
+
+    table.add_row(
+        "⚫ Error >30",
+        f"{greater_30:,} ({greater_30 / total * 100:.2f}%)"
+    )
+
+    table.add_row(
+        "📊 Accuracy",
+        f"[bold green]{accuracy:.5f}%[/bold green]"
+    )
+
+    console.print(
+        Panel.fit(
+            table,
+            title="[bold green]Resultados de entrenamiento[/bold green]",
+            border_style="green",
+        )
+    )
+
