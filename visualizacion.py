@@ -66,7 +66,7 @@ def layer_structure(network_layers):
     return network_layer_info
 
 
-def show_topology_t_diagram(network_layer_info, title):
+def show_topology_t_diagram(network_layer_info, title, is_component = False):
     items = []
     for i, n in enumerate(network_layer_info):
         # Neurons represented with dots vertical dots in column.
@@ -80,11 +80,9 @@ def show_topology_t_diagram(network_layer_info, title):
         if i < len(network_layer_info) - 1:
             items.append(Align.center(Text("→", style="bold cyan"), vertical="middle"))
     result = Columns(items, title=title)
-    
-    console.print(result)
-    return result
+    return items if is_component else console.print(result)
 
-def show_network_layer_info(network_layer_info):
+def show_network_layer_info(network_layer_info, is_component = False):
     net = network_layer_info
     total_parameters = 0
     # Paramethers size calculted as: Parameters=(inputs×outputs)+outputs
@@ -95,13 +93,10 @@ def show_network_layer_info(network_layer_info):
         total_parameters += input_layer_size * output_layer_size + output_layer_size
     
     table = Table(show_header=False, box=None, pad_edge=False)
-    table.add_column(style="magenta", width=38)  # Ajusta el ancho para alinear el texto
-    table.add_column(style="bold white")
 
-    # 2. Agregamos las filas de información
     
     table.add_row(
-        richMessage(f"Neuronas de entrada (Input neurons):", "blue", True),
+        richMessage("Neuronas de entrada (Input neurons):", "blue", True),
         richMessage(f"{network_layer_info[0]}","white", True)
     )
     table.add_row(
@@ -124,25 +119,13 @@ def show_network_layer_info(network_layer_info):
         richMessage(f"{total_parameters:,}", "white", True)
     )
 
-    # 3. Envolvemos la tabla en un Panel con borde y título
-
-    console.print(
-        Panel.fit(
-            table,
-            title="[bold green]Resultados de entrenamiento[/bold green]",
-            border_style="green",
-            width=200
-        )
+    table_info = Panel.fit(
+        table,
+        title="[bold green]Resultados de entrenamiento[/bold green]",
+        border_style="green",
+        width=200
     )
-    
-#     richMessage(f"""
-# Neuronas de entrada (Input neurons):    {network_layer_info[0]}
-# Capas ocultas (Hidden layers):          {len(network_layer_info)-2}
-# Neuronas de salida (Output neurons):    {network_layer_info[-1]}
-# Total de capas (Total layers):          {len(network_layer_info)}
-# Parametros (parameters):                {total_parameters}
-#                 """, "magenta"
-#                 )
+    return table if is_component else console.print(table_info)
     
 
 def richMessage(text, color, in_div=False):

@@ -16,7 +16,7 @@ from dataset import generate_linear_dataset, test_cases
 import visualizacion as vs
 from rich.console import Console
 from rich.columns import Columns
-
+from rich.table import Table
 console = Console()
 # -----------------------
 # DATOS INICIALES
@@ -105,23 +105,6 @@ history, data_epoch = Trainer.train(
 )
 vs.richMessage("Entrenamiento Terminado con Exito ", "bold green")
 
-vs.horizontalRule()
-# -----------------------
-# TABLA DE CAPAS
-# -----------------------
-network_layers = vs.layer_structure(network.layers)
-vs.show_topology_t_diagram(network_layer_info = network_layers, title = "Topologia")
-vs.show_network_layer_info(network_layer_info=network_layers)
-
-# -----------------------
-# TABLA EPOCAS POR FUNCION
-# -----------------------
-data_epochs_table =[[str(item[0]), f"{item[1]:.5f}"] for item in data_epoch]
-
-vs.table(title = "Funcion de perdida por epocas",columns= ("Epocas (Epochs)","Func. Perdida (Loss)",),rows= data_epochs_table)
-
-
-
 # -----------------------
 # IMPRIMIR RESULTADOS
 # FIXME Get all this prints and tables to another class or refactor for clarity
@@ -148,7 +131,6 @@ for a, b, c, x in tests:
     rows.append(data)
     MAE.append(error)
 
-vs.table(f"Resultados de {ecuacion}", ("ab+c=x", "IA", "Diferencia"),rows[:20])
 # times the neural net got the value right
 correct_ai_prediction_quantity = sum(1 for i in MAE if i == 0)
 exact = sum(1 for error in MAE if error == 0)
@@ -159,6 +141,49 @@ between_20_30 = sum(1 for error in MAE if 20 < error <= 30)
 greater_30 = sum(1 for error in MAE if error > 30)
 # Mean absolute error
 mae_value = sum(MAE)/len(MAE)
+
+vs.horizontalRule()
+# -----------------------
+# TABLA DE CAPAS
+# -----------------------
+network_layers = vs.layer_structure(network.layers)
+
+topo_diagram = vs.show_topology_t_diagram(network_layer_info = network_layers, title = "Topologia", is_component=True)
+
+topo_data = vs.show_network_layer_info(network_layer_info=network_layers,is_component=True)
+
+
+
+# 2. Wrap each list of items into its own separate Columns renderable
+col1 = Columns(topo_diagram, title="Topologia de red")
+col2 = Columns([topo_data], title="Información")
+
+# 3. Create a master table to act as a side-by-side grid container
+grid = Table.grid(expand=True)  
+grid.add_column(justify="center", ratio=1)
+grid.add_column(justify="center", ratio=1)
+
+# 4. Add both column layouts as a single row
+grid.add_row(col1, col2)
+
+# 5. Print the final result
+console.print(grid)
+
+
+# layout_results = Columns([topo_diagram, topo_diagram_two], expand=True, width=10000)
+
+# console.print(layout_results)
+# -----------------------
+# TABLA EPOCAS POR FUNCION
+# -----------------------
+data_epochs_table =[[str(item[0]), f"{item[1]:.5f}"] for item in data_epoch]
+
+vs.table(title = "Funcion de perdida por epocas",columns= ("Epocas (Epochs)","Func. Perdida (Loss)",),rows= data_epochs_table)
+
+
+vs.table(f"Resultados de {ecuacion}", ("ab+c=x", "IA", "Diferencia"),rows[:20])
+
+
 # TODO might need more statistics such as a residual plot, RMSE data and S squared data.
 # print(f"MAE: {mae_value}")
 # # 
