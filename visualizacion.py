@@ -94,15 +94,55 @@ def show_network_layer_info(network_layer_info):
         output_layer_size = net[layer+1]
         total_parameters += input_layer_size * output_layer_size + output_layer_size
     
+    table = Table(show_header=False, box=None, pad_edge=False)
+    table.add_column(style="magenta", width=38)  # Ajusta el ancho para alinear el texto
+    table.add_column(style="bold white")
+
+    # 2. Agregamos las filas de información
     
-    richMessage(f"""
-Neuronas de entrada (Input neurons):    {network_layer_info[0]}
-Capas ocultas (Hidden layers):          {len(network_layer_info)-2}
-Neuronas de salida (Output neurons):    {network_layer_info[-1]}
-Total de capas (Total layers):          {len(network_layer_info)}
-Parametros (parameters):                {total_parameters}
-                """, "magenta"
-                )
+    table.add_row(
+        richMessage(f"Neuronas de entrada (Input neurons):", "blue", True),
+        richMessage(f"{network_layer_info[0]}","white", True)
+    )
+    table.add_row(
+        richMessage("Capas ocultas (Hidden layers):", "blue", True),
+        richMessage(f"{len(network_layer_info)-2}", "white", True)
+    )
+
+    table.add_row(
+        richMessage("Neuronas de salida (Output neurons):", "blue", True),
+        richMessage(f"{network_layer_info[-1]}", "white", True)
+    )
+
+    table.add_row(
+        richMessage("Total de capas (Total layers):", "blue", True),
+        richMessage(f"{len(network_layer_info)}", "white", True)
+    )
+
+    table.add_row(
+        richMessage("Parámetros (parameters):", "blue", True),
+        richMessage(f"{total_parameters:,}", "white", True)
+    )
+
+    # 3. Envolvemos la tabla en un Panel con borde y título
+
+    console.print(
+        Panel.fit(
+            table,
+            title="[bold green]Resultados de entrenamiento[/bold green]",
+            border_style="green",
+            width=200
+        )
+    )
+    
+#     richMessage(f"""
+# Neuronas de entrada (Input neurons):    {network_layer_info[0]}
+# Capas ocultas (Hidden layers):          {len(network_layer_info)-2}
+# Neuronas de salida (Output neurons):    {network_layer_info[-1]}
+# Total de capas (Total layers):          {len(network_layer_info)}
+# Parametros (parameters):                {total_parameters}
+#                 """, "magenta"
+#                 )
     
 
 def richMessage(text, color, in_div=False):
