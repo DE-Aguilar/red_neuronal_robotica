@@ -1,0 +1,56 @@
+# Red neuronal simple demostrativa para clase, entrenamiento en tiempo real.
+# Real-Time Perceptron & Neural Network, demostration for class.
+
+[![Python Version](https://img.shields.io/badge/python-3.13.5%20%20-blue.svg)](https://www.python.org/downloads/release/python-3135/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+Una implementación desde cero de una red neuronal con entrenamiento, prueba y resumen de gráficos y tablas para su análisis.
+
+La red aprende a predecir el valor de $x$ a partir de tres entradas: $a$, $b$ y $c$. Durante el entrenamiento, se visualiza la evolución del aprendizaje en la terminal mostrando la función de pérdida por época y compara algunas predicciones con valores reales.
+
+Este proyecto fue desarrollado originalmente como un módulo demostrativo para entornos educativos en una protoboard para una LCD. (NOTA: no se tiene el código ni esquemas para la LCD)
+---
+
+## Características Principales
+
+- **Backpropagation desde cero:** Implementación limpia de la propagación hacia atrás y optimización analítica basada puramente en operaciones matriciales (`NumPy`).
+- **Monitoreo en Tiempo Real:** Integración con `Rich` para mostrar tablas dinámicas, estructuras de capas y progreso detallado de la pérdida (Loss) por época.
+- **Visualización Gráfica:** Generación automática de curvas de convergencia y métricas de error (`Matplotlib`).
+- **Arquitecturas Modulares:** Soporte nativo para el intercambio dinámico de topologías (Wide, Medium, Small, Bottleneck).
+
+---
+
+## Demostración y Resultados
+
+
+![Vista previa del entrenamiento](./assets/training_in_real_time.png)
+
+Al finalizar el entrenamiento, el simulador despliega de forma automática:
+1. **Estructura de Capas:** Inspección visual de la topología seleccionada.
+2. **Curva de Pérdida:** Gráfico de la evolución del error.
+3. **Mesa de Predicciones:** Tabla comparativa entre los valores reales y las inferencias de la red.
+4. **Métricas de Precisión:** Conteo de aciertos exactos en el set de pruebas y cálculo del **MAE (Mean Absolute Error)**.
+
+![Tabla de una porcion de resultados](./assets/test_dataset_results.png)
+![Gráfico de la evolución del error (loss function)](./assets/loss_function_graph.png)
+
+---
+
+## Requisitos e Instalación
+
+Se recomienda el uso de un entorno virtual (`venv`) para el aislamiento de dependencias.
+
+```bash
+# 1. Clonar el repositorio
+git clone [https://github.com/DE-Aguilar/red_neuronal_robotica.git](https://github.com/DE-Aguilar/red_neuronal_robotica.git)
+cd CARPETA_DE_TU_REPOSITORIO_CLONADO
+
+# 2. Crear y activar entorno virtual
+python3 -m venv venv
+source venv/bin/activate  # En Windows usa: venv\Scripts\activate
+
+# 3. Instalar librerías necesarias
+pip install numpy scipy matplotlib rich
+
+# 4. Ejecutar main.py
+python3 main.py
