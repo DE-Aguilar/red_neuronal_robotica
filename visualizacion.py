@@ -9,12 +9,11 @@
 #       usa 3 capas. 
 # -----------------------
 import matplotlib.pyplot as plt
-import numpy as np
-import rich as r
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
-import matplotlib.pyplot as plt
+from rich.syntax import Syntax
+from rich.text import Text
 console = Console()
 def show_loss_gradient(data_epoch, epochs_num, title, data_size, min, max):
     epochs = [epoch for epoch, _ in data_epoch]
@@ -53,17 +52,11 @@ def layerStructure(network_layers):
     for i, layer in enumerate(network_layers):
         layer_info = [(str(i), *map(str, layer.weights.shape)) for i, layer in enumerate(network_layers)]
     table("Capas", ("Capa", "N. Entrada", "N. Salida"), layer_info)
+    return layer_info
 
 
-def richMessage(message, color):
-    
-
-    console.print(
-        Panel.fit(
-            f"[bold {color}]{str(message)}[/bold {color}]",
-            border_style=color
-        )
-    )
+def richMessage(text, color):
+    return Text(text, style=color)
 
 def richResults(
     mae,
@@ -122,3 +115,10 @@ def richResults(
         )
     )
 
+def printer(file_path):
+    with open(file_path, "r") as file:
+        content = file.read()
+    return Syntax(content, lexer="text", background_color="default")
+
+rocket = printer('assets/rocket.txt')
+title = printer('assets/title.txt')

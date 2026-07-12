@@ -1,4 +1,14 @@
+.gitignore
 __pycache__
 playgrounds.py
 .venv
 investigacion_de_datos.md
+.python-version
+pyproject.toml
+dependency_links.txt
+PKG-INFO
+requires.txt
+SOURCES.txt
+top_level.txt
+uv.lock
+

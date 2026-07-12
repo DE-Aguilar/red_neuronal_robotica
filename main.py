@@ -11,14 +11,13 @@
 from topologies import Topologies
 import numpy as np
 import itertools
-from network import NeuralNetwork
-from layer import Layer
 from train import Trainer
-from activations import ActivationFunctions
 from dataset import generate_linear_dataset, test_cases
 import visualizacion as vs
+from rich.console import Console
+from rich.columns import Columns
 
-
+console = Console()
 # -----------------------
 # DATOS INICIALES
 # -----------------------
@@ -34,18 +33,25 @@ lr = 0.025 #Recomendado
 red_neuronal = Topologies.medium() # Opciones: .wide .medium .small .bottle_neck
 tests = test_cases(1000, minimo, maximo)
 test_constant = tests[0]
-vs.richMessage(
-    f"""[white]CONFIGURACION DE ENTRENAMIENTO[/white]
-        [white]x = f(a,b,c) = ab+c[/white]
 
-[cyan]Cantidad Datos de Entrenamiento:[/cyan] {data_size:,}
-[cyan]Epocas:[/cyan] {epochs:,}
-[cyan]Valor Minimo:[/cyan] {minimo}
-[cyan]Valor Maximo:[/cyan] {maximo}
-[cyan]Tasa de aprendizaje:[/cyan] {lr}
+init_values_message = vs.richMessage(
+    f"""CONFIGURACION DE ENTRENAMIENTO
+        x = f(a,b,c) = ab+c
+        ---------------------------
+        Cantidad Datos de Entrenamiento: {data_size:,}
+        Epocas: {epochs:,}
+        Valor Minimo: {minimo}
+        Valor Maximo: {maximo}
+        Tasa de aprendizaje: {lr}
 """,
     "blue"
 )
+# Print rocket with table aside
+console.print(vs.title)
+console.print(Columns([vs.rocket, init_values_message],  equal = False, expand= False))
+
+vs.horizontalRule()
+
 # print(f"data_size = {data_size}\nepochs = {epochs}\nminimo = {minimo}\nmaximo = {maximo}\nlr = {lr}")
 
 def compute_x_range(low, high):
@@ -102,12 +108,14 @@ vs.horizontalRule()
 # TABLA DE CAPAS
 # -----------------------
 vs.layerStructure(network.layers)
+
+
 # -----------------------
 # TABLA EPOCAS POR FUNCION
 # -----------------------
 data_epochs_table =[[str(item[0]), f"{item[1]:.5f}"] for item in data_epoch]
 
-vs.table("Funcion de perdida por epocas", ("Epocas (Epochs)","Func. Perdida (Loss)",), data_epochs_table)
+vs.table(title = "Funcion de perdida por epocas",columns= ("Epocas (Epochs)","Func. Perdida (Loss)",),rows= data_epochs_table)
 
 
 
@@ -131,13 +139,13 @@ MAE = []
 for a, b, c, x in tests:
     predicted = round(predict(network, a, b, c))
 
-    error = abs(predicted - x)
-    
-    data =[str(x) for x in [a,b,c,x,predicted,error]]
+    error = abs(int(predicted - x))
+    data_one = f"{int(a)} x {int(b)} + {int(c)} = {int(x)}"
+    data =[str(x) for x in [data_one,predicted,error]]
     rows.append(data)
     MAE.append(error)
 
-vs.table(f"Resultados de {ecuacion}", ("a", "b", "c", "Verdadero", "IA", "Diferencia"),rows[:20])
+vs.table(f"Resultados de {ecuacion}", ("ab+c=x", "IA", "Diferencia"),rows[:20])
 # times the neural net got the value right
 correct_ai_prediction_quantity = sum(1 for i in MAE if i == 0)
 exact = sum(1 for error in MAE if error == 0)

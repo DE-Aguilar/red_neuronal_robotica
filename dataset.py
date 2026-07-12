@@ -9,7 +9,6 @@
 #       usa 3 capas. 
 # -----------------------
 import random
-import numpy as np
 def generate_linear_dataset(size=10000, low=-50, high=50):
 
     dataset = []

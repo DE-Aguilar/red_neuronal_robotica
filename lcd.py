@@ -10,9 +10,9 @@ from dataset import generate_linear_dataset, test_cases
 import numpy as np
 import itertools
 from topologies import Topologies
+from train import Trainer
 
 def lcd():
-    ecuacion = "x=ab+c"
     # -------------------
     # MODIFICAME
     # -------------------
@@ -20,7 +20,7 @@ def lcd():
     epochs = 30 #recomendado 30000 a 35000
     minimo = 5.0 # valor minimo
     maximo = 50.0 # valor maximo
-    red_neuronal = Topologies.small() # Opciones: .wide .medium .small .bottle_neck
+    Topologies.small() # Opciones: .wide .medium .small .bottle_neck
     # -------------------
     tests = test_cases(1, minimo, maximo)
     lr = 0.02 
@@ -54,6 +54,13 @@ def lcd():
     Y = (Y - x_min) / (x_max - x_min)
 
     network = Topologies.small()
+    history, data_epoch = Trainer.train(
+    network,
+    X,
+    Y,
+    epochs = epochs,
+    lr=lr
+)
 
     def predict(network, a, b, c):
         a_norm = (a - minimo) / (maximo - minimo)

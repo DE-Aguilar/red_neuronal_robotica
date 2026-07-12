@@ -6,7 +6,6 @@
 # Objetivo: Por medio de entrenamiento la IA deberá hacercarse lo más posible al valor correcto de x.
 # -----------------------
 
-from scipy.stats import truncnorm
 import numpy as np
 
 class Layer:
