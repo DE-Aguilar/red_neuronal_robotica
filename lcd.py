@@ -12,18 +12,19 @@ import itertools
 from topologies import Topologies
 from train import Trainer
 
+
 def lcd():
     # -------------------
     # MODIFICAME
     # -------------------
-    data_size = 100 #recomendado 7000 a 10000
-    epochs = 30 #recomendado 30000 a 35000
-    minimo = 5.0 # valor minimo
-    maximo = 50.0 # valor maximo
-    Topologies.small() # Opciones: .wide .medium .small .bottle_neck
+    data_size = 100  # recomendado 7000 a 10000
+    epochs = 30  # recomendado 30000 a 35000
+    minimo = 5.0  # valor minimo
+    maximo = 50.0  # valor maximo
+    Topologies.small()  # Opciones: .wide .medium .small .bottle_neck
     # -------------------
     tests = test_cases(1, minimo, maximo)
-    lr = 0.02 
+    lr = 0.02
 
     def compute_x_range(low, high):
         """Calcula el rango real de x = a*b + c evaluando las esquinas."""
@@ -41,7 +42,6 @@ def lcd():
     X = np.array([inputs for inputs, target in dataset], dtype=np.float32)
     Y = np.array([[target] for inputs, target in dataset], dtype=np.float32)
 
-    
     # -----------------------
     # Normalizado a valores x,x y -x,x . Faltan pruebas para -x,-y
     # -----------------------
@@ -54,13 +54,7 @@ def lcd():
     Y = (Y - x_min) / (x_max - x_min)
 
     network = Topologies.small()
-    history, data_epoch = Trainer.train(
-    network,
-    X,
-    Y,
-    epochs = epochs,
-    lr=lr
-)
+    history, data_epoch = Trainer.train(network, X, Y, epochs=epochs, lr=lr)
 
     def predict(network, a, b, c):
         a_norm = (a - minimo) / (maximo - minimo)
@@ -70,7 +64,6 @@ def lcd():
         pred = network.forward(x_input)[-1]
         return pred[0][0] * (x_max - x_min) + x_min
 
-    
     for a, b, c, x in tests:
         continue
     result = predict(network, a, b, c)
@@ -78,7 +71,8 @@ def lcd():
     # -----------------------
     # CAPAS RED NEURONAL
     # -----------------------
-    
-    return f"\nFor a={a}, b={b}, c={c} → predicted x = {result:.4f} | true x = {a*b+c:.4f}"
+
+    return f"\nFor a={a}, b={b}, c={c} → predicted x = {result:.4f} | true x = {a * b + c:.4f}"
+
 
 print(lcd())

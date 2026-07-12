@@ -6,13 +6,12 @@
 # Objetivo: Por medio de entrenamiento la IA deberá hacercarse lo más posible al valor correcto de x.
 # Comentarios y ajustes:
 #       El resultado varia dependiendo del tamaño de datos de entrenamiento, su variabilidad y rango.
-#       usa 3 capas. 
+#       usa 3 capas.
 # -----------------------
 import numpy as np
 
 
 class ActivationFunctions:
-
     @staticmethod
     def sigmoid(x):
         return 1 / (1 + np.exp(-x))

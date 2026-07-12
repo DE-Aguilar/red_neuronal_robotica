@@ -9,16 +9,17 @@
 from losses import Losses
 import visualizacion as vs
 from rich.console import Console
-console = Console()
-class Trainer:
 
+console = Console()
+
+
+class Trainer:
     @staticmethod
     def train(network, X, Y, epochs, lr):
         history = []
         data_epoch = []
 
         for epoch in range(epochs):
-
             outputs = network.forward(X)
 
             loss, gradient = Losses.mse(outputs[-1], Y)
@@ -29,10 +30,10 @@ class Trainer:
 
             if (epoch + 1) % (epochs // 10) == 0:
                 data_epoch.append((epoch + 1, loss))
-                console.print(vs.richMessage(f"Epoch {epoch+1} | Loss: {loss:.6f}", "white", True))
-                
+                console.print(
+                    vs.richMessage(
+                        f"Epoch {epoch + 1} | Loss: {loss:.6f}", "white", True
+                    )
+                )
 
         return history, data_epoch
-
-        
-        
