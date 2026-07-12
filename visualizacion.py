@@ -14,6 +14,9 @@ from rich.table import Table
 from rich.panel import Panel
 from rich.syntax import Syntax
 from rich.text import Text
+from rich.columns import Columns
+from rich.align import Align
+
 console = Console()
 def show_loss_gradient(data_epoch, epochs_num, title, data_size, min, max):
     epochs = [epoch for epoch, _ in data_epoch]
@@ -47,16 +50,67 @@ def table(title, columns, rows):
     console = Console()
     console.print(table)
     horizontalRule()
-
-def layerStructure(network_layers):
+    
+def layer_structure(network_layers):
+    layers=[]
+    network_layer_info=[]
     for i, layer in enumerate(network_layers):
-        layer_info = [(str(i), *map(str, layer.weights.shape)) for i, layer in enumerate(network_layers)]
-    table("Capas", ("Capa", "N. Entrada", "N. Salida"), layer_info)
-    return layer_info
+        # layers info mapping in the form of eg. Topology.medium() :  [('0', '3', '16'), ('1', '16', '8'), ('2', '8', '1')]
+        # as layer number, input neurons, output neurons.
+        layers = [(str(i), *map(str, layer.weights.shape)) for i, layer in enumerate(network_layers)]
+    for layer in layers:
+        # Get layer's neuron's quantity
+        network_layer_info.append(int(layer[1]))
+        # Get exit layer neuron's quantity
+    network_layer_info.append(int(layers[-1][-1]))
+    return network_layer_info
 
 
-def richMessage(text, color):
-    return Text(text, style=color)
+def show_topology_t_diagram(network_layer_info, title):
+    items = []
+    for i, n in enumerate(network_layer_info):
+        # Neurons represented with dots vertical dots in column.
+        panel = Panel(
+            Align.center("\n".join("●" for _ in range(n)), vertical="middle"),
+            title=str(n),
+            height=max(network_layer_info)
+        )
+        items.append(panel)
+        # Little arrow thought would look cool.
+        if i < len(network_layer_info) - 1:
+            items.append(Align.center(Text("→", style="bold cyan"), vertical="middle"))
+    result = Columns(items, title=title)
+    
+    console.print(result)
+    return result
+
+def show_network_layer_info(network_layer_info):
+    net = network_layer_info
+    total_parameters = 0
+    # Paramethers size calculted as: Parameters=(inputs×outputs)+outputs
+    network_layers=len(net)-1
+    for layer in range(network_layers):
+        input_layer_size = net[layer]
+        output_layer_size = net[layer+1]
+        total_parameters += input_layer_size * output_layer_size + output_layer_size
+    
+    
+    richMessage(f"""
+Neuronas de entrada (Input neurons):    {network_layer_info[0]}
+Capas ocultas (Hidden layers):          {len(network_layer_info)-2}
+Neuronas de salida (Output neurons):    {network_layer_info[-1]}
+Total de capas (Total layers):          {len(network_layer_info)}
+Parametros (parameters):                {total_parameters}
+                """, "magenta"
+                )
+    
+
+def richMessage(text, color, in_div=False):
+    message= Text(text, style=color)
+    if in_div:
+        return message
+    else:
+        console.print(message)
 
 def richResults(
     mae,

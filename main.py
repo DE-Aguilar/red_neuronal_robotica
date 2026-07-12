@@ -35,7 +35,8 @@ tests = test_cases(1000, minimo, maximo)
 test_constant = tests[0]
 
 init_values_message = vs.richMessage(
-    f"""CONFIGURACION DE ENTRENAMIENTO
+    f"""
+        CONFIGURACION DE ENTRENAMIENTO
         x = f(a,b,c) = ab+c
         ---------------------------
         Cantidad Datos de Entrenamiento: {data_size:,}
@@ -44,7 +45,8 @@ init_values_message = vs.richMessage(
         Valor Maximo: {maximo}
         Tasa de aprendizaje: {lr}
 """,
-    "blue"
+    "blue",
+    True
 )
 # Print rocket with table aside
 console.print(vs.title)
@@ -107,8 +109,9 @@ vs.horizontalRule()
 # -----------------------
 # TABLA DE CAPAS
 # -----------------------
-vs.layerStructure(network.layers)
-
+network_layers = vs.layer_structure(network.layers)
+vs.show_topology_t_diagram(network_layer_info = network_layers, title = "Topologia")
+vs.show_network_layer_info(network_layer_info=network_layers)
 
 # -----------------------
 # TABLA EPOCAS POR FUNCION
