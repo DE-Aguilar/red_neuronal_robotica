@@ -16,6 +16,7 @@ from rich.syntax import Syntax
 from rich.text import Text
 from rich.columns import Columns
 from rich.align import Align
+from rich import box
 
 console = Console()
 def show_loss_gradient(data_epoch, epochs_num, title, data_size, min, max):
@@ -125,15 +126,19 @@ def show_network_layer_info(network_layer_info, is_component = False):
         border_style="green",
         width=200
     )
-    return table if is_component else console.print(table_info)
+    return table_info if is_component else console.print(table_info)
     
 
-def richMessage(text, color, in_div=False):
-    message= Text(text, style=color)
-    if in_div:
-        return message
-    else:
-        console.print(message)
+def richMessage(text, color, is_component=False):
+    panel = Panel(
+    f"[bold {color}]{text}[/bold {color}]",
+    box=box.ROUNDED,      
+    border_style="cyan",
+    expand=False            # Keeps the panel tight around the text instead of full-width
+    )
+
+    message = Text(text, style=color)
+    return message if is_component else console.print(panel)
 
 def richResults(
     mae,

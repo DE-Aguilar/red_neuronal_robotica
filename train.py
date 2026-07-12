@@ -8,7 +8,8 @@
 
 from losses import Losses
 import visualizacion as vs
-
+from rich.console import Console
+console = Console()
 class Trainer:
 
     @staticmethod
@@ -28,7 +29,7 @@ class Trainer:
 
             if (epoch + 1) % (epochs // 10) == 0:
                 data_epoch.append((epoch + 1, loss))
-                vs.richMessage(f"Epoch {epoch+1} | Loss: {loss:.6f}", "white")
+                console.print(vs.richMessage(f"Epoch {epoch+1} | Loss: {loss:.6f}", "white", True))
                 
 
         return history, data_epoch

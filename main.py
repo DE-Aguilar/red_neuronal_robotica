@@ -39,8 +39,8 @@ init_values_message = vs.richMessage(
         CONFIGURACION DE ENTRENAMIENTO
         x = f(a,b,c) = ab+c
         ---------------------------
-        Cantidad Datos de Entrenamiento: {data_size:,}
-        Epocas: {epochs:,}
+        Cantidad Datos de Entrenamiento: {data_size}
+        Epocas: {epochs}
         Valor Minimo: {minimo}
         Valor Maximo: {maximo}
         Tasa de aprendizaje: {lr}
@@ -118,7 +118,7 @@ def predict(network, a, b, c):
     return pred[0][0] * (x_max - x_min) + x_min
 
 
-# Columnas para tabla
+# Columnas para tabla Muestra de resultados
 rows = []
 # Mean absolute error
 MAE = []
@@ -131,7 +131,7 @@ for a, b, c, x in tests:
     rows.append(data)
     MAE.append(error)
 
-# times the neural net got the value right
+# Times the neural net got the value right
 correct_ai_prediction_quantity = sum(1 for i in MAE if i == 0)
 exact = sum(1 for error in MAE if error == 0)
 between_0_5 = sum(1 for error in MAE if 0 < error <= 5)
@@ -139,6 +139,7 @@ between_5_10 = sum(1 for error in MAE if 5 < error <= 10)
 between_10_20 = sum(1 for error in MAE if 10 < error <= 20)
 between_20_30 = sum(1 for error in MAE if 20 < error <= 30)
 greater_30 = sum(1 for error in MAE if error > 30)
+
 # Mean absolute error
 mae_value = sum(MAE)/len(MAE)
 
@@ -152,43 +153,33 @@ topo_diagram = vs.show_topology_t_diagram(network_layer_info = network_layers, t
 
 topo_data = vs.show_network_layer_info(network_layer_info=network_layers,is_component=True)
 
-
-
-# 2. Wrap each list of items into its own separate Columns renderable
+# Wrap each list of items into its own separate Columns renderable
 col1 = Columns(topo_diagram, title="Topologia de red")
-col2 = Columns([topo_data], title="Información")
+col2 = Columns([topo_data])
 
-# 3. Create a master table to act as a side-by-side grid container
+# Create a master table to act as a side-by-side grid container
 grid = Table.grid(expand=True)  
-grid.add_column(justify="center", ratio=1)
-grid.add_column(justify="center", ratio=1)
+grid.add_column(justify="left" , ratio = 2)
+grid.add_column(justify="left", ratio = 6)
 
-# 4. Add both column layouts as a single row
 grid.add_row(col1, col2)
 
-# 5. Print the final result
+# Grid
 console.print(grid)
 
 
-# layout_results = Columns([topo_diagram, topo_diagram_two], expand=True, width=10000)
-
-# console.print(layout_results)
 # -----------------------
 # TABLA EPOCAS POR FUNCION
 # -----------------------
-data_epochs_table =[[str(item[0]), f"{item[1]:.5f}"] for item in data_epoch]
+# data_epochs_table =[[str(item[0]), f"{item[1]:.5f}"] for item in data_epoch]
 
-vs.table(title = "Funcion de perdida por epocas",columns= ("Epocas (Epochs)","Func. Perdida (Loss)",),rows= data_epochs_table)
+# vs.table(title = "Funcion de perdida por epocas",columns= ("Epocas (Epochs)","Func. Perdida (Loss)",),rows= data_epochs_table)
 
 
-vs.table(f"Resultados de {ecuacion}", ("ab+c=x", "IA", "Diferencia"),rows[:20])
+vs.table(f"Muestra de resultados de {ecuacion}", (ecuacion, "IA", "Diferencia"),rows[:20])
 
 
 # TODO might need more statistics such as a residual plot, RMSE data and S squared data.
-# print(f"MAE: {mae_value}")
-# # 
-# print(f"En efecto es ia {correct_ai_prediction_quantity} veces de {len(tests)}.")
-# print (f"porcentaje de acertividad: {round(correct_ai_prediction_quantity/len(tests)*100,5)}%")
 vs.richResults(
     mae=mae_value,
     correct=correct_ai_prediction_quantity,
