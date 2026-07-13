@@ -17,6 +17,7 @@ import visualization.texts as vs
 from rich.console import Console
 from rich.columns import Columns
 from rich.table import Table
+import  visualization.diagrams as dg
 
 console = Console()
 # -----------------------
