@@ -13,7 +13,7 @@ import numpy as np
 import itertools
 from train import Trainer
 from dataset import generate_linear_dataset, test_cases
-import visualizacion as vs
+import visualization.texts as vs
 from rich.console import Console
 from rich.columns import Columns
 from rich.table import Table
@@ -53,7 +53,7 @@ init_values_message = vs.richMessage(
 console.print(vs.title)
 console.print(Columns([vs.rocket, init_values_message], equal=False, expand=False))
 
-vs.horizontalRule()
+vs.horizontal_rule()
 
 # print(f"data_size = {data_size}\nepochs = {epochs}\nminimo = {minimo}\nmaximo = {maximo}\nlr = {lr}")
 
@@ -141,14 +141,14 @@ greater_30 = sum(1 for error in MAE if error > 30)
 # Mean absolute error
 mae_value = sum(MAE) / len(MAE)
 
-vs.horizontalRule()
+vs.horizontal_rule()
 # -----------------------
 # TABLA DE CAPAS
 # -----------------------
 network_layers = vs.layer_structure(network.layers)
 
 topo_diagram = vs.show_topology_t_diagram(
-    network_layer_info=network_layers, title="Topologia", is_component=True
+    network_layer_info=network_layers,  is_component=True
 )
 
 topo_data = vs.show_network_layer_info(

@@ -7,7 +7,7 @@
 # -----------------------
 
 from losses import Losses
-import visualizacion as vs
+import visualization.texts as vs
 from rich.console import Console
 
 console = Console()
