@@ -12,6 +12,6 @@ class neural_network_config:
     maximo = 50.0  # valor maximo
     lr = 0.025  # Recomendado
     red_neuronal = Topologies.medium()  # Opciones: .wide .medium .small .bottle_neck
-    test_size = 1
+    test_size = 10
     
 

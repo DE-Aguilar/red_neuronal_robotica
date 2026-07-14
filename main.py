@@ -76,8 +76,8 @@ def calculate_results(tests, data: neural_network_config):
     results_table_rows = []
     # Mean absolute error
     MAE = []
+    data_in_predicted = data
     for a, b, c, x in tests:
-        data_in_predicted = data
         predicted = round(predict( a, b, c, data_in_predicted))
 
         error = abs(int(predicted - x))
@@ -151,6 +151,7 @@ def demo_show_results():
 # Neural Net
 # -----------------------
 # Pan y circo
+net_data = neural_network_config
 demo_show_data(neural_network_config,False)
 network = neural_network_config.red_neuronal
 demo_show_neural_net(network = network) # network calls network_config.red_neuronal which is Topologies.medium(), Topologies.medium() has network = NeuralNetwork(), NeuralNetwork has a var layers=[]
@@ -166,8 +167,8 @@ history, data_epoch = Trainer.train(network, X, Y, epochs=neural_network_config.
 data_epochs_table =[[str(item[0]), f"{item[1]:.5f}"] for item in data_epoch]
 # vs.table(title = "Funcion de perdida por epocas",columns= ("Epocas (Epochs)","Func. Perdida (Loss)",),rows= data_epochs_table)
 demo_show_results()
-tests = test_cases(neural_network_config.test_size, neural_network_config.minimo, neural_network_config.maximo)
-exacts, mae_value, greater_30 = calculate_results(tests,  neural_network_config)
+tests = test_cases(neural_network_config.test_size, net_data.minimo, net_data.maximo)
+exacts, mae_value, greater_30 = calculate_results(tests,  net_data)
 
 # -----------------------
 # ENTRENAMIENTO¨
