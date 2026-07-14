@@ -40,8 +40,9 @@ def compute_x_range(low, high):
     x_max = ab_max + high
     return x_min, x_max
 
-def normalize(data: neural_network_config, x_min, x_max):
+def normalize(data: neural_network_config):
     # tamano de datos
+    x_min, x_max = compute_x_range(data.minimo, data.maximo)
     dataset = generate_linear_dataset(size=data.data_size)
 
     X = np.array([inputs for inputs, target in dataset], dtype=np.float32)
@@ -60,6 +61,7 @@ def normalize(data: neural_network_config, x_min, x_max):
     return X, Y
 
 def predict( a, b, c, data: neural_network_config):
+    # FIX: Error on list type data.min. (It shouldnt be a list)
     min, max = data.minimo, data.maximo
     network = neural_network_config.red_neuronal
     a_norm = (a - min) / (max - min)
@@ -75,7 +77,8 @@ def calculate_results(tests, data: neural_network_config):
     # Mean absolute error
     MAE = []
     for a, b, c, x in tests:
-        predicted = round(predict( a, b, c, data))
+        data_in_predicted = data
+        predicted = round(predict( a, b, c, data_in_predicted))
 
         error = abs(int(predicted - x))
         data_one = f"{int(a)} x {int(b)} + {int(c)} = {int(x)}"
@@ -154,7 +157,7 @@ demo_show_neural_net(network = network) # network calls network_config.red_neuro
 
 # Normalization of data
 x_min, x_max = compute_x_range(neural_network_config.minimo, neural_network_config.maximo)
-X,Y = normalize(neural_network_config, x_min, x_max)
+X,Y = normalize(neural_network_config)
 
 # Training
 history, data_epoch = Trainer.train(network, X, Y, epochs=neural_network_config.epochs, lr=neural_network_config.lr)
@@ -165,11 +168,9 @@ data_epochs_table =[[str(item[0]), f"{item[1]:.5f}"] for item in data_epoch]
 demo_show_results()
 tests = test_cases(neural_network_config.test_size, neural_network_config.minimo, neural_network_config.maximo)
 exacts, mae_value, greater_30 = calculate_results(tests,  neural_network_config)
-console.print(exacts)
-console.print(mae_value)
-console.print(greater_30)
+
 # -----------------------
-# ENTRENAMIENTO
+# ENTRENAMIENTO¨
 # sTAMBIEN IMPRIME LA PERDIDA EN train.py EN TIEMPO REAL POR EPOCH
 # -----------------------
 
