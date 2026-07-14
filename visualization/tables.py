@@ -30,37 +30,30 @@ def show_network_layer_info(network_layer_info, is_component=False):
     table = Table(show_header=False, box=None, pad_edge=False)
 
     table.add_row(
-        "Neuronas de entrada (Input neurons):",
-        "blue",
-        f"{network_layer_info[0]}",
-        "white",
+
+        f"[bold green]Neuronas de entrada (Input neurons):[bold green]",
+        
+        f"[bold white]{network_layer_info[0]}[bold white]",
+        
     )
     table.add_row(
-        "Capas ocultas (Hidden layers):",
-        "blue",
-        f"{len(network_layer_info) - 2}",
-        "white",
+        "[bold green]Capas ocultas (Hidden layers):[/bold green]",
+        f"[bold white]{len(network_layer_info) - 2}[/bold white]",
     )
 
     table.add_row(
-        "Neuronas de salida (Output neurons):",
-        "blue",
-        f"{network_layer_info[-1]}",
-        "white",
+        "[bold green]Neuronas de salida (Output neurons):[/bold green]",
+        f"[bold white]{network_layer_info[-1]}[/bold white]",
     )
 
     table.add_row(
-        "Total de capas (Total layers):",
-        "blue",
-        f"{len(network_layer_info)}",
-        "white",
+        "[bold green]Total de capas (Total layers):[/bold green]",
+        f"[bold white]{len(network_layer_info)}[/bold white]",
     )
 
     table.add_row(
-        "Parámetros (parameters):",
-        "blue",
-        f"{total_parameters:,}",
-        "white",
+        "[bold green]Parámetros (parameters):[/bold green]",
+        f"[bold white]{total_parameters:,}[/bold white]",
     )
 
     table_info = Panel.fit(

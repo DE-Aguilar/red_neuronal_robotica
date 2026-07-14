@@ -15,7 +15,7 @@ from rich.panel import Panel
 
 from rich.text import Text
 from rich import box
-
+from config import neural_network_config
 
 console = Console()
 
@@ -29,4 +29,21 @@ def richMessage(text, color, is_component=False):
     )
 
     message = Text(text, style=color)
-    return message if is_component else console.print(panel)
+    return message if is_component else panel
+
+def init_values_message(data: neural_network_config):
+    
+    return richMessage(
+    f"""
+CONFIGURACION DE ENTRENAMIENTO
+{data.ecuacion}
+---------------------------
+Cantidad Datos de Entrenamiento: {data.data_size}
+Epocas: {data.epochs}
+Valor Minimo: {data.minimo}
+Valor Maximo: {data.maximo}
+Tasa de aprendizaje: {data.lr}
+""",
+    "blue",
+    True,
+    )
