@@ -31,10 +31,11 @@ def richMessage(text, color, is_component=False):
     message = Text(text, style=color)
     return message if is_component else panel
 
+
 def init_values_message(data: neural_network_config):
-    
+
     return richMessage(
-    f"""
+        f"""
 CONFIGURACION DE ENTRENAMIENTO
 {data.ecuacion}
 ---------------------------
@@ -44,6 +45,6 @@ Valor Minimo: {data.minimo}
 Valor Maximo: {data.maximo}
 Tasa de aprendizaje: {data.lr}
 """,
-    "blue",
-    True,
+        "blue",
+        True,
     )

@@ -1,8 +1,7 @@
 from dataclasses import dataclass
-from visualization.ascii import rocket, title
 from topologies import Topologies
-from rich.columns import Columns
-import visualization.texts as txt
+
+
 @dataclass
 class neural_network_config:
     ecuacion = "x=ab+c"
@@ -13,5 +12,3 @@ class neural_network_config:
     lr = 0.025  # Recomendado
     red_neuronal = Topologies.medium()  # Opciones: .wide .medium .small .bottle_neck
     test_size = 10
-    
-

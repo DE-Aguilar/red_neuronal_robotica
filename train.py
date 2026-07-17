@@ -7,7 +7,6 @@
 # -----------------------
 
 from losses import Losses
-import visualization.texts as vs
 from rich.console import Console
 import visualization.texts as txt
 
@@ -20,7 +19,9 @@ class Trainer:
         history = []
         data_epoch = []
 
-        init_training_message = txt.richMessage("Entrenamiento Iniciado ... ", "bold cyan", False)
+        init_training_message = txt.richMessage(
+            "Entrenamiento Iniciado ... ", "bold cyan", False
+        )
         console.print(init_training_message)
 
         for epoch in range(epochs):
@@ -39,9 +40,10 @@ class Trainer:
                         f"Epoch {epoch + 1} | Loss: {loss:.6f}", "white", True
                     )
                 )
-                
-        finished_training_message = txt.richMessage("Entrenamiento Terminado con Exito ", "bold green", False)
-        console.print(finished_training_message)
 
+        finished_training_message = txt.richMessage(
+            "Entrenamiento Terminado con Exito ", "bold green", False
+        )
+        console.print(finished_training_message)
 
         return history, data_epoch

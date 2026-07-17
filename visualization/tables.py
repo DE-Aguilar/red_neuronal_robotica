@@ -30,11 +30,8 @@ def show_network_layer_info(network_layer_info, is_component=False):
     table = Table(show_header=False, box=None, pad_edge=False)
 
     table.add_row(
-
-        f"[bold green]Neuronas de entrada (Input neurons):[bold green]",
-        
+        "[bold green]Neuronas de entrada (Input neurons):[bold green]",
         f"[bold white]{network_layer_info[0]}[bold white]",
-        
     )
     table.add_row(
         "[bold green]Capas ocultas (Hidden layers):[/bold green]",
