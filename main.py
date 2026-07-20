@@ -19,8 +19,8 @@ from rich.table import Table
 import visualization.texts as txt
 from visualization.ascii import rocket, title, horizontal_line
 from visualization.diagrams import layer_structure, show_topology_t_diagram
-from visualization.tables import show_network_layer_info
-from config import neural_network_config
+from visualization.tables import show_network_layer_info, table as vstable, richResults
+from config import Neural_network_data, Metrics_data
 from topologies import Topologies
 
 
@@ -38,7 +38,7 @@ def compute_x_range(low, high):
     return x_min, x_max
 
 
-def normalize(data: neural_network_config):
+def normalize(data: Neural_network_data):
     # tamano de datos
     x_min, x_max = compute_x_range(data.minimo, data.maximo)
     dataset = generate_linear_dataset(size=data.data_size)
@@ -59,10 +59,11 @@ def normalize(data: neural_network_config):
     return X, Y
 
 
-def predict(a, b, c, data: neural_network_config):
+def predict(a, b, c, data: Neural_network_data):
     # FIX: Error on list type data.min. (It shouldnt be a list)
     min, max = data.minimo, data.maximo
-    network = neural_network_config.red_neuronal
+    x_min, x_max = compute_x_range(min, max)
+    network = Neural_network_data.red_neuronal
     a_norm = (a - min) / (max - min)
     b_norm = (b - min) / (max - min)
     c_norm = (c - min) / (max - min)
@@ -71,40 +72,68 @@ def predict(a, b, c, data: neural_network_config):
     return pred[0][0] * (x_max - x_min) + x_min
 
 
-def calculate_results(tests, data: neural_network_config):
-    # Columnas para tabla Muestra de resultados
-    results_table_rows = []
+def calculate_results(tests, data: Neural_network_data, demo = True):
+    neural_net_config = data
     # Mean absolute error
-    MAE = []
-    data_in_predicted = data
-    for a, b, c, x in tests:
-        predicted = round(predict(a, b, c, data_in_predicted))
+    errors = []
+    results = []
 
-        error = abs(int(predicted - x))
-        data_one = f"{int(a)} x {int(b)} + {int(c)} = {int(x)}"
-        data = [str(x) for x in [data_one, predicted, error]]
-        results_table_rows.append(data)
-        MAE.append(error)
-    mae_value = sum(MAE) / len(MAE)
-    # 0 ,1, 5, 10, 20, 40, 60
-    # Times the neural net got the value right
-    # Keep only numbers greater than 10 using a lambda function
-    # filt/ered_iterator = filter(lambda x: x < mae_value*0., error)
-    # filtered_numbers = list(filtered_iterator)
-    # correct_ai_prediction_quantity = sum(1 for i in MAE if i == 0)
-    exact = sum(1 for error in MAE if error == 0)
-    # between_0_5 = sum(1 for error in MAE if 0 < error <= 5)
-    # between_5_10 = sum(1 for error in MAE if 5 < error <= 10)
-    # between_10_20 = sum(1 for error in MAE if 10 < error <= 20)
-    # between_20_30 = sum(1 for error in MAE if 20 < error <= 30)
-    greater_30 = sum(1 for error in MAE if error > 30)
+    # calculate results uses accuracy
+    for a, b, c, correct_ans in tests:
+        predicted = round(predict(a, b, c, neural_net_config))
+        error = abs(int(predicted - correct_ans))
 
-    # Mean absolute error
+        results.append([a,b,c, correct_ans, predicted, error])
+        
+        errors.append(error)
+    mae = sum(errors) / len(errors)
+    buckets, small_error, big_error  = accuracy(results)
+    metrics = Metrics_data(
+        mae=  mae,
+        results=results,
+        buckets= buckets,
+        small_error=small_error,
+        big_error=big_error
+    )
+    if demo:
+       demo_show_results(data, metrics) 
+    
+    return metrics
 
-    return exact, mae_value, greater_30
+def accuracy(results):
+    buckets = {
+        "exacts": 0,
+        "<5%": 0,
+        "<10%": 0,
+        "<20%": 0,
+        ">20%": 0,
+        ">80%": 0,
+    }
+    big_error = []
+    small_error = []
+    for a,b,c, correct_ans, predicted, error in results:
+        error_percent = abs(error) / abs(correct_ans) * 100
+        sample = [correct_ans, predicted, error]
+        predicted_data = [a,b,c,correct_ans, predicted, error]
+        if error == 0:
+            buckets["exacts"] += 1
+        elif error_percent <= 5:
+            buckets["<5%"] += 1
+            small_error.append(predicted_data)
+        elif error_percent <= 10:
+            buckets["<10%"] += 1
+        elif error_percent <= 20:
+            buckets["<20%"] += 1
+        elif error_percent >20:
+            buckets[">20%"] += 1
+        elif error_percent > 80:
+            buckets[">80%"] += 1
+            big_error.append(predicted_data)
+
+    return buckets, small_error, big_error
 
 
-def demo_show_data(data: neural_network_config, is_demo=True):
+def demo_show_data(data: Neural_network_data, is_demo=True):
     visuals = {
         "title_ascci": title,
         "rocket_ascci": rocket,
@@ -147,64 +176,35 @@ def demo_show_neural_net(network: Topologies):
     # Grid
     console.print(grid)
 
-def demo_show_results():
+
+def demo_show_results(data: Neural_network_data, metrics: Metrics_data
+                      ):
+
+    
+
     pass
 
 
 # Pan y circo
-net_data = neural_network_config
-demo_show_data(neural_network_config, False)
+net_data = Neural_network_data
+demo_show_data(Neural_network_data, False)
 # Network instance
-network = neural_network_config.red_neuronal
+network = Neural_network_data.red_neuronal
 demo_show_neural_net(
     network=network
 )  # network calls network_config.red_neuronal which is Topologies.medium(), Topologies.medium() has network = NeuralNetwork(), NeuralNetwork has a var layers=[]
 
-# Normalization of data
-x_min, x_max = compute_x_range(
-    neural_network_config.minimo, neural_network_config.maximo
-)
-X, Y = normalize(neural_network_config)
+X, Y = normalize(Neural_network_data)
 
 # Training
 history, data_epoch = Trainer.train(
-    network, X, Y, epochs=neural_network_config.epochs, lr=neural_network_config.lr
+    network, X, Y, epochs=Neural_network_data.epochs, lr=Neural_network_data.lr
 )
 
 # Output data
 data_epochs_table = [[str(item[0]), f"{item[1]:.5f}"] for item in data_epoch]
 # vs.table(title = "Funcion de perdida por epocas",columns= ("Epocas (Epochs)","Func. Perdida (Loss)",),rows= data_epochs_table)
-demo_show_results()
-tests = test_cases(neural_network_config.test_size, net_data.minimo, net_data.maximo)
-exact, mae_value, greater_30 = calculate_results(tests, net_data)
-
-
-print(exact)
-# vs.table(
-#     f"Muestra de resultados de {data.ecuacion}", (data.ecuacion, "IA", "Diferencia"), results_table_rows[:20]
-# )
-# vs.horizontal_rule()
-# vs.richResults(
-# mae=mae_value,
-# correct=correct_ai_prediction_quantity,
-# total=len(tests),
-# between_0_5=between_0_5,
-# between_5_10=between_5_10,
-# between_10_20=between_10_20,
-# between_20_30=between_20_30,
-# greater_30=greater_30,
-# )
-
-# result = predict(network, a, b, c)
-# return result
-
-# # results shown at the end.
-# # Grafica funcion de perdida
-# vs.show_loss_gradient(
-#     data_epoch,
-#     epochs_num=epochs,
-#     title="Funcion de perdida",
-#     data_size=data_size,
-#     min=minimo,
-#     max=maximo,
-# )
+# demo_show_results()
+tests = test_cases(Neural_network_data.test_size, net_data.minimo, net_data.maximo)
+metrics = calculate_results(tests, net_data)
+metrics.mae

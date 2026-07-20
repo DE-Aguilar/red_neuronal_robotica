@@ -3,7 +3,7 @@ from topologies import Topologies
 
 
 @dataclass
-class neural_network_config:
+class Neural_network_data:
     ecuacion = "x=ab+c"
     data_size = 30  # Recomendado 30000
     epochs = 100  # 100000
@@ -11,4 +11,13 @@ class neural_network_config:
     maximo = 50.0  # valor maximo
     lr = 0.025  # Recomendado
     red_neuronal = Topologies.medium()  # Opciones: .wide .medium .small .bottle_neck
-    test_size = 10
+    test_size = 30
+
+
+@dataclass
+class Metrics_data:
+    mae: float
+    results: list
+    buckets: dict
+    small_error: list
+    big_error: list

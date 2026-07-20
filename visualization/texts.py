@@ -15,7 +15,7 @@ from rich.panel import Panel
 
 from rich.text import Text
 from rich import box
-from config import neural_network_config
+from config import Neural_network_data
 
 console = Console()
 
@@ -32,7 +32,7 @@ def richMessage(text, color, is_component=False):
     return message if is_component else panel
 
 
-def init_values_message(data: neural_network_config):
+def init_values_message(data: Neural_network_data):
 
     return richMessage(
         f"""
