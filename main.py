@@ -207,4 +207,18 @@ data_epochs_table = [[str(item[0]), f"{item[1]:.5f}"] for item in data_epoch]
 # demo_show_results()
 tests = test_cases(Neural_network_data.test_size, net_data.minimo, net_data.maximo)
 metrics = calculate_results(tests, net_data)
-metrics.mae
+alpha=metrics.mae
+beta=metrics.big_error
+charly=metrics.small_error
+delta=metrics.buckets
+print("mae")
+
+console.print(alpha)
+print("big")
+console.print(beta)
+print("small")
+
+console.print(charly)
+print("buckets")
+console.print(delta)
+
